@@ -118,3 +118,7 @@ resource "aws_instance" "nodejs-ubuntu" {
 output "nodejs_public_ip" {
  value = [aws_instance.nodejs-ubuntu.*.public_ip]
 }
+
+output "aws_instance_ip" {
+  value = aws_instance.nodejs-ubuntu.private_ip
+}

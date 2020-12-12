@@ -18,3 +18,6 @@ variable "lambda_arn" {
 variable "lambda_name" {
     type    = string
 }
+variable "aws_instance" {
+    type    = string
+}

@@ -101,6 +101,7 @@ module "alb" {
     vpc_id      = module.test_vpc.eitan_vpc_id   
     lambda_arn  = module.lambda.lambda_arn  
     lambda_name = module.lambda.lambda_name
+    aws_instance = module.ec2.aws_instance_ip
 }
 
 output "ec2_public_ip" {
