@@ -1,0 +1,15 @@
+[
+  {
+    "name": "eitan-nodejs-slim",
+    "image": "${data.aws_ecr_repository.nginx-ecr.repository_url}",
+    "cpu": 256,
+    "memory": 512,
+    "essential": true,
+    "portMappings": [
+      {
+        "containerPort": 80,
+        "hostPort": 80
+      }
+    ]
+  }
+]
