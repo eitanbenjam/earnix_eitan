@@ -163,3 +163,7 @@ output "dns_name" {
 output "ecs_target_group" {
   value = aws_lb_target_group.ecs_target_group.id
 }
+
+output "sec_group" {
+  value = aws_security_group.load_balancer_security_group.id
+}

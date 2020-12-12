@@ -26,7 +26,7 @@ resource "aws_security_group" "ubuntu" {
     from_port   = 8000
     to_port     = 8000
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"]
+    security_groups = [ var.lb_sec_group ]
   } 
 
   egress {
@@ -92,10 +92,6 @@ resource "aws_instance" "nodejs-ubuntu" {
   iam_instance_profile = aws_iam_instance_profile.instance_ecr_role_instance.name
   user_data = data.template_file.install_docker.rendered
   associate_public_ip_address = true
-  #network_interface {
-  #  device_index         = 0
-  #  network_interface_id = aws_network_interface.web-server-nic.id
-  #}
 
   tags = {
     Name = "earnix"

@@ -77,6 +77,7 @@ module "ecs" {
   alb_id           = module.alb.alb_id
   ecs_target_group = module.alb.ecs_target_group
   vpc_id           = module.test_vpc.eitan_vpc_id
+  lb_sec_group = module.alb.sec_group
   
 }
 
@@ -91,6 +92,7 @@ module "ec2" {
     subnet_id       = aws_subnet.public_us_east_1b.id
     vpc_id      = module.test_vpc.eitan_vpc_id
     container_name  = var.container_name
+    lb_sec_group = module.alb.sec_group
 }
 
 # Creating LoadBalancer
@@ -102,10 +104,6 @@ module "alb" {
     lambda_arn  = module.lambda.lambda_arn  
     lambda_name = module.lambda.lambda_name
     aws_instance = module.ec2.aws_instance_ip
-}
-
-output "ec2_public_ip" {
-    value = module.ec2.nodejs_public_ip
 }
 
 output "load_balancer_url" {

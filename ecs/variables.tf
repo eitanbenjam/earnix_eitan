@@ -38,3 +38,7 @@ variable "ecs_target_group" {
 variable "vpc_id" {
   type        = string
 }
+
+variable "lb_sec_group" {
+  type       = string
+}

@@ -17,3 +17,7 @@ variable "container_name" {
 variable "vpc_id" {
     type = string
 }
+
+variable "lb_sec_group" {
+    type = string
+}

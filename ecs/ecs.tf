@@ -42,7 +42,7 @@ resource "aws_security_group" "ecs_security_group" {
     from_port   = 8000 # Allowing traffic in from port 80
     to_port     = 8000
     protocol    = "tcp"
-    cidr_blocks = ["0.0.0.0/0"] # Allowing traffic in from all sources
+    security_groups = [ var.lb_sec_group ]
   }
 
   egress {
