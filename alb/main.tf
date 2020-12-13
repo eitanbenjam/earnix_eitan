@@ -59,6 +59,21 @@ resource "aws_lb_target_group" "ecs_target_group" {
   depends_on = [aws_alb.application_load_balancer] 
 }
 
+# Creating  ASG target group
+
+resource "aws_lb_target_group" "asg_target_group" {
+  name        = "asg-target-group"
+  port        = 80
+  protocol    = "HTTP"
+  target_type = "ip"
+  vpc_id      = var.vpc_id
+  health_check {
+    matcher = "200,301,302"
+    path = "/test"
+  }
+  depends_on = [aws_alb.application_load_balancer] 
+}
+
 
 # Creating  Lambda target group
 resource "aws_lb_target_group" "lambda_target_group" {
@@ -98,6 +113,22 @@ resource "aws_lb_listener_rule" "ecs_forword" {
   condition {
     path_pattern {
       values = ["/ecs"]
+    }
+  }    
+}
+
+resource "aws_lb_listener_rule" "asg_forword" {
+  listener_arn = aws_lb_listener.listener.arn
+  priority     = 91
+
+  action {
+    type             = "forward"
+    target_group_arn = aws_lb_target_group.asg_target_group.id
+  }
+
+  condition {
+    path_pattern {
+      values = ["/asg"]
     }
   }    
 }
