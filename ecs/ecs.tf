@@ -9,14 +9,6 @@ resource "aws_iam_role_policy_attachment" "ecsTaskExecutionRole_policy" {
   policy_arn = "arn:aws:iam::aws:policy/service-role/AmazonECSTaskExecutionRolePolicy"
 }
 
-resource "aws_iam_role_policy_attachment" "AmazonECS_FullAccess" {
-  role       = aws_iam_role.ecs_iam.name
-  policy_arn = "arn:aws:iam::aws:policy/AmazonECS_FullAccess"
-}
-
- 
-
-
 resource "aws_ecs_cluster" "eitan_ecs_cluster" {
   name = var.ecs_cluster_name
 
@@ -59,7 +51,6 @@ resource "aws_ecs_service" "http" {
   cluster         = aws_ecs_cluster.eitan_ecs_cluster.id
   task_definition = aws_ecs_task_definition.http.arn
   desired_count   = 1
-  #iam_role        = aws_iam_role.ecs_iam.arn
   depends_on      = [aws_iam_role.ecs_iam]
 
 
@@ -70,8 +61,8 @@ resource "aws_ecs_service" "http" {
   
   network_configuration {
     subnets          = var.subnets
-    assign_public_ip = true # Providing our containers with public IPs
-    security_groups  = [aws_security_group.ecs_security_group.id] # Setting the security group
+    assign_public_ip = true
+    security_groups  = [aws_security_group.ecs_security_group.id] # Setting ALB the security group
   }
 
   load_balancer {
