@@ -3,11 +3,6 @@ provider "aws" {
   region  = "us-east-1"
 }
 
-data "aws_ecr_repository" "nodejs-ecr" {
-  name = var.container_name
-}
-
-
 resource "aws_security_group" "ubuntu" {
   name        = "ubuntu-security-group"
   description = "Allow 8000 and SSH traffic"
@@ -48,9 +43,9 @@ resource "aws_security_group" "ubuntu" {
  #}
 
 data "template_file" "install_docker" {
-template = file("${path.module}/install_docker.tpl")
-vars = {
-  container_name           = data.aws_ecr_repository.nodejs-ecr.repository_url
+ template = file("${path.module}/../user_data_files/${var.user_data_file}")
+ vars = {
+  container_name  = var.ecr_repository
  }
 }
 

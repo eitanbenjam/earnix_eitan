@@ -119,6 +119,7 @@ resource "aws_lb_listener_rule" "ec2_forword" {
 }
 
 resource "aws_lb_listener_rule" "lambda_forword" {
+  count = var.lambda_name != "none" ? 1 : 0
   listener_arn = aws_lb_listener.listener.arn
   priority     = 96
 
@@ -135,6 +136,7 @@ resource "aws_lb_listener_rule" "lambda_forword" {
 }
 
 resource aws_lambda_permission alb {
+  count = var.lambda_name != "none" ? 1 : 0
   statement_id  = "AllowExecutionFromALB"
   action        = "lambda:InvokeFunction"
   function_name = var.lambda_name
@@ -145,6 +147,7 @@ resource aws_lambda_permission alb {
 
 
 resource "aws_lb_target_group_attachment" "lambda_forword_attach" {
+  count = var.lambda_name != "none" ? 1 : 0
   target_group_arn = aws_lb_target_group.lambda_target_group.arn
   target_id        = var.lambda_arn
   depends_on       = [aws_lambda_permission.alb]

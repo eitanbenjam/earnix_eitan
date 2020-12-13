@@ -3,11 +3,11 @@ variable "subnet_id" {
 }
 
 variable "ami_name" {
-    default = "ami-00ddb0e5626798373"
+    type    = string    
 }
 
 variable "instance_type" {
-    default = "t2.micro"
+    type  = string    
 }
 
 variable "container_name" {
@@ -19,5 +19,13 @@ variable "vpc_id" {
 }
 
 variable "lb_sec_group" {
+    type = string
+}
+
+variable "user_data_file" {
+    type = string
+}
+
+variable "ecr_repository" {
     type = string
 }

@@ -13,6 +13,7 @@ variable "vpc_id" {
 
 variable "lambda_arn" {
     type    = string
+    default = "none"
 }
 
 variable "lambda_name" {

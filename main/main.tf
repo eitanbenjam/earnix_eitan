@@ -7,6 +7,7 @@ data "aws_ecr_repository" "nodejs-ecr" {
   name = var.container_name
 }
 
+
 # Creating earnix vpc
 module "test_vpc" {
   source   = "../vpc"
@@ -72,6 +73,7 @@ resource "aws_route_table_association" "b" {
 
 # Creating ECS
 module "ecs" {
+  #count = var.do_ecs ? 1 : 0
   source           = "../ecs"
   subnets          = [aws_subnet.public_us_east_1a.id, aws_subnet.public_us_east_1b.id]
   alb_id           = module.alb.alb_id
@@ -83,25 +85,50 @@ module "ecs" {
 
 # Creating Lambda
 module "lambda" {
+    #count = var.do_lambda ? 1 : 0
     source = "../lambda"    
 }
 
 # Createing EC2
 module "ec2" {
+    #count = var.do_ec2 ? 1 : 0
     source = "../ec2"
     subnet_id       = aws_subnet.public_us_east_1b.id
-    vpc_id      = module.test_vpc.eitan_vpc_id
+    vpc_id          = module.test_vpc.eitan_vpc_id
     container_name  = var.container_name
-    lb_sec_group = module.alb.sec_group
+    lb_sec_group    = module.alb.sec_group
+    ami_name        = var.ami_name
+    user_data_file  = var.user_data_file
+    instance_type   = var.instance_type
+    ecr_repository  = data.aws_ecr_repository.nodejs-ecr.repository_url
 }
+
+# Creating ASG
+module "asg" {
+  #count = var.do_asg ? 1 : 0
+  source         = "../asg"
+  ami_name       = var.ami_name
+  instance_type  = var.instance_type
+  name_prefix    = "eitan_asg"
+  user_data_file = var.user_data_file
+  vpc_id         = module.test_vpc.eitan_vpc_id
+  lb_sec_group   = module.alb.sec_group
+  alb_id         = module.alb.alb_id
+  subnets        = [aws_subnet.public_us_east_1a.id, aws_subnet.public_us_east_1b.id]
+  ecr_repository = data.aws_ecr_repository.nodejs-ecr.repository_url
+  
+
+}
+
 
 # Creating LoadBalancer
 module "alb" {
     source      = "../alb"   
     subnets     = [aws_subnet.public_us_east_1a.id, aws_subnet.public_us_east_1b.id]
     lb_name     = "earnixAlb"
-    vpc_id      = module.test_vpc.eitan_vpc_id   
-    lambda_arn  = module.lambda.lambda_arn  
+    vpc_id      = module.test_vpc.eitan_vpc_id
+    lambda_arn  = module.lambda.lambda_arn 
+    
     lambda_name = module.lambda.lambda_name
     aws_instance = module.ec2.aws_instance_ip
 }

@@ -14,3 +14,30 @@ variable "container_name" {
   type        = string
 }
 
+variable "ami_name" {
+    type     = string
+}
+
+variable "instance_type" {
+    type = string
+}
+
+variable "do_ecs" {
+    type = bool
+}
+
+variable "do_ec2" {
+    type = bool
+}
+
+variable "do_asg" {
+    type = bool
+}
+
+variable "do_lambda" {
+    type = bool
+}
+
+variable "user_data_file" {
+    type = string
+}
